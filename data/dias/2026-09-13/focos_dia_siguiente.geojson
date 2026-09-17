@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"name": "focos_dia_siguiente",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "comuna_id": "31580391B85497931091832", "n_det": 1, "frp": 2.53 }, "geometry": { "type": "Point", "coordinates": [ -73.13944, -38.75614 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B85497931091832", "n_det": 4, "frp": 36.46 }, "geometry": { "type": "Point", "coordinates": [ -73.129547402754127, -38.512567516548081 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B26084207259489", "n_det": 8, "frp": 42.62 }, "geometry": { "type": "Point", "coordinates": [ -72.182852525157898, -38.423292532764478 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B37553691538573", "n_det": 1, "frp": 4.84 }, "geometry": { "type": "Point", "coordinates": [ -72.43417, -38.10266 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B79044384128192", "n_det": 6, "frp": 96.04 }, "geometry": { "type": "Point", "coordinates": [ -71.217281723625987, -38.052283411358232 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B76441458871791", "n_det": 2, "frp": 19.88 }, "geometry": { "type": "Point", "coordinates": [ -72.321869988316934, -37.930060024747078 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B79044384128192", "n_det": 1, "frp": 6.91 }, "geometry": { "type": "Point", "coordinates": [ -71.55949, -37.82663 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B71117118367624", "n_det": 1, "frp": 8.67 }, "geometry": { "type": "Point", "coordinates": [ -73.30221, -37.78556 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B65956713874388", "n_det": 3, "frp": 56.37 }, "geometry": { "type": "Point", "coordinates": [ -72.072023355816327, -37.749706693565585 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B47956415575590", "n_det": 1, "frp": 12.02 }, "geometry": { "type": "Point", "coordinates": [ -73.54915, -37.72675 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B65956713874388", "n_det": 2, "frp": 7.78 }, "geometry": { "type": "Point", "coordinates": [ -72.283485009591729, -37.719310001089269 ] } },
+{ "type": "Feature", "properties": { "comuna_id": "31580391B25805905563941", "n_det": 1, "frp": 1.2 }, "geometry": { "type": "Point", "coordinates": [ -72.1716, -36.8679 ] } }
+]
+}
