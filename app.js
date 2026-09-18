@@ -23,7 +23,9 @@
   const days = index.dias.map((d) => d.dia); const byDay = Object.fromEntries(index.dias.map((d) => [d.dia, d]));
   const last = days[days.length - 1];
   const hoursOld = (Date.now() - new Date(index.actualizado)) / 36e5;
-  $("#status").textContent = `Actualizado ${new Date(index.actualizado).toLocaleString("es-CL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })} · próxima corrida 06:00`;
+  // siempre en hora de Chile: sin timeZone el navegador usa la del visitante (en Nueva Zelanda mostraba 12 h de más)
+  const enChile = (t) => new Date(t).toLocaleString("es-CL", { timeZone: "America/Santiago", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false });
+  $("#status").textContent = `Actualizado ${enChile(index.actualizado)} · próxima corrida 06:00 · hora de Chile`;
   $("#dot").className = "dot " + (hoursOld < 30 ? "ok" : "old");
   $("#upd").textContent = `${index.dias.length} días publicados · ${index.resumen.dias_con_focos} verificados con focos`;
   const sel = $("#daysel"); days.slice().reverse().forEach((d) => { const o = document.createElement("option"); o.value = d; o.textContent = fLong(d); sel.appendChild(o); });
