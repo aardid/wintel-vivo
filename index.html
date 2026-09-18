@@ -3,121 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wintel · Pronóstico de ocurrencia</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="app.css?v=5">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Wintel en vivo · acceso por invitación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root { --bg:#faf9f7; --surface:#fff; --ink:#1c1a17; --ink-2:#57534c; --ink-3:#8b857b; --hair:#e7e3dc; --accent:#c2451e; --accent-ink:#a63a17; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#161412; --surface:#201d1a; --ink:#f3efe9; --ink-2:#b5aea3; --ink-3:#847d72; --hair:#2e2a26; --accent:#ec6a3a; --accent-ink:#f08055; } }
+  :root[data-theme="dark"] { --bg:#161412; --surface:#201d1a; --ink:#f3efe9; --ink-2:#b5aea3; --ink-3:#847d72; --hair:#2e2a26; --accent:#ec6a3a; --accent-ink:#f08055; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--ink); font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.6; padding:16px; }
+  .card { background:var(--surface); border:1px solid var(--hair); border-radius:14px; max-width:44rem; width:100%; padding:clamp(1.5rem,5vw,3rem); }
+  .brand { display:flex; align-items:baseline; gap:.6rem; margin-bottom:1.75rem; }
+  .brand .word { font-weight:800; font-size:1.15rem; letter-spacing:-.01em; }
+  .brand .sub { font-size:.85rem; color:var(--ink-3); font-weight:500; }
+  .rule { width:56px; height:4px; border-radius:2px; background:var(--accent); margin-bottom:1.25rem; }
+  h1 { font-size:clamp(1.5rem,4vw,2.1rem); font-weight:800; letter-spacing:-.02em; line-height:1.15; margin:0 0 1rem; text-wrap:balance; }
+  p { color:var(--ink-2); margin:0 0 1rem; }
+  p.small { font-size:.9rem; color:var(--ink-3); }
+  a { color:var(--accent-ink); }
+  .meta { margin-top:2rem; padding-top:1.25rem; border-top:1px solid var(--hair); font-size:.95rem; }
+  .meta b { color:var(--ink); }
+</style>
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <div class="logo" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 5 4 9a4 4 0 0 1-8 0c0-2 1-3 1-3s0 3 2 3c1-2-1-5 1-9z"/></svg></div>
-    <div><div class="t1">Wintel · Pronóstico de ocurrencia</div><div class="t2">Ñuble, Biobío y La Araucanía · 86 comunas · celdas de 1 km</div></div>
-  </div>
-  <nav class="tabs" role="tablist">
-    <button class="tab on" data-tab="hoy" role="tab">Hoy</button>
-    <button class="tab" data-tab="verificacion" role="tab">Verificación</button>
-    <button class="tab" data-tab="metodo" role="tab">Datos y método</button>
-  </nav>
-  <div class="status"><span class="dot" id="dot"></span><span id="status">cargando…</span></div>
-</header>
-
-<section id="hoy" class="view on">
-  <div class="daterow">
-    <div class="datenav">
-      <button class="icon" id="prev" title="día anterior" aria-label="día anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="datelbl"><span class="d1" id="d1">—</span><span class="d2" id="d2"></span></div>
-      <button class="icon" id="next" title="día siguiente" aria-label="día siguiente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
-      <button class="pill" id="today">Ir a hoy</button>
-      <select id="daysel" class="pill" aria-label="elegir día"></select>
-    </div>
-    <div class="seg" role="group" aria-label="capa">
-      <span class="lbl">Ver</span>
-      <button class="segb on" data-layer="km">Mapa 1 km</button>
-      <button class="segb" data-layer="comuna">Por comuna</button>
-    </div>
-  </div>
-
-  <div class="body">
-    <div class="card mapcard">
-      <div class="cardhead"><div class="h">Probabilidad relativa de ignición mañana</div>
-        <div class="legend"><span>menor</span><span class="ramp"></span><span>mayor</span></div></div>
-      <div id="map" class="map" role="img" aria-label="mapa del pronóstico"></div>
-      <div class="maplegend">
-        <span><i class="sw zone"></i><span id="km2lbl">1.000 km²</span> priorizados</span>
-        <span><i class="sw foco"></i>foco VIIRS nuevo del día siguiente (se completa al día siguiente)</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="cardhead"><div class="h">Comunas priorizadas para <span id="para">mañana</span></div><div class="note">índice 0–100 para ordenar · prob. foco = probabilidad calibrada de al menos un foco mañana</div></div>
-      <div class="hz" id="hz"><button class="segb on" data-h="1">Mañana</button><button class="segb" data-h="2">+2 días</button><button class="segb" data-h="3">+3 días</button></div>
-      <table class="tbl" id="tbl"><thead><tr><th>#</th><th>Comuna</th><th>Índice</th><th class="r" title="probabilidad calibrada de que aparezca al menos un foco nuevo en la comuna al día siguiente (regresión isotónica sobre 11 temporadas fuera de muestra)">Prob. foco</th><th class="r">Ayer</th><th class="r" title="focos nuevos en la comuna, últimos 7 días">7 d</th></tr></thead><tbody></tbody></table>
-      <div class="actions"><a class="btn dark" id="csv" href="#" download>Descargar tabla (CSV)</a><a class="btn" id="geo" href="#" download>Zonas 1 km (GeoJSON)</a></div>
-    </div>
-
-    <aside class="col">
-      <div class="card">
-        <div class="h">Cómo nos fue ayer</div>
-        <p class="p" id="ayertxt">El pronóstico de ayer se contrasta con los focos VIIRS detectados hoy.</p>
-        <div class="kpis"><div><b id="k_focos">—</b><span>focos nuevos</span></div><div><b id="k_w" class="blue">—</b><span>en el top-10 Wintel</span></div><div><b id="k_h" class="mute">—</b><span>en el top-10 histórico</span></div></div>
-        <div class="foot">Un mal día se muestra igual que uno bueno.</div>
-      </div>
-      <div class="card">
-        <div class="h">Temporada hasta hoy</div>
-        <div class="kpis big"><div><b id="s_w" class="blue">—</b><span>focos capturados por el top-10 Wintel</span></div><div><b id="s_h" class="mute">—</b><span>frecuencia histórica</span></div></div>
-        <div class="foot" id="s_txt">—</div>
-      </div>
-      <div class="card grow">
-        <div class="cardhead"><div class="h">Últimos 30 días</div><div class="note">índice regional · focos nuevos</div></div>
-        <svg id="spark" viewBox="0 0 300 120" width="100%" height="120" aria-label="índice regional y focos, últimos 30 días"></svg>
-        <div class="maplegend"><span><i class="sw line"></i>índice regional Wintel</span><span><i class="sw bar"></i>focos nuevos del día</span></div>
-      </div>
-    </aside>
-  </div>
-</section>
-
-<section id="verificacion" class="view">
-  <div class="daterow"><div class="datelbl"><span class="d1">Verificación día a día</span><span class="d2">cada pronóstico se contrasta al día siguiente con los focos VIIRS detectados</span></div></div>
-  <div class="body two">
-    <div class="card">
-      <table class="tbl ver" id="vtbl"><thead><tr><th>Pronóstico del</th><th>Tres primeras comunas</th><th class="r">Focos al día sig.</th><th>Capturados top-10 Wintel</th><th>Capturados top-10 histórico</th><th>En zonas 1 km</th><th class="r">Mapa</th></tr></thead><tbody></tbody>
-        <tfoot><tr id="vtot"><td>total</td><td class="mute">suma del periodo</td><td class="r"></td><td></td><td></td><td></td><td></td></tr></tfoot></table>
-    </div>
-    <aside class="col">
-      <div class="card"><div class="h">Temporada hasta hoy</div>
-        <div class="kpis big"><div><b id="v_w" class="blue">—</b><span>top-10 Wintel</span></div><div><b id="v_h" class="mute">—</b><span>frecuencia histórica</span></div><div><b id="v_z" class="orange">—</b><span>zonas de 1 km</span></div></div>
-        <div class="foot" id="v_txt">—</div></div>
-      <div class="card"><div class="h">Referencia fuera de muestra</div>
-        <p class="p">En 11 temporadas (2015–2025) nunca vistas por el modelo: top-10 Wintel 41 % frente a 35 % de la frecuencia histórica; 1.000 km² de zonas 12,6 % frente a 8,9 %. Con pocos focos por día la cifra de una semana oscila mucho.</p></div>
-      <div class="card"><div class="h">Exportar</div><div class="actions col2"><a class="btn" id="vcsv" href="#" download>Verificación (CSV)</a></div></div>
-    </aside>
-  </div>
-</section>
-
-<section id="metodo" class="view">
-  <div class="body one">
-    <div class="card prose">
-      <h2>Qué es esto</h2>
-      <p>Cada mañana a las 06:00 (hora de Chile) el sistema estima, para cada una de las 86 comunas de Ñuble, Biobío y La Araucanía, la probabilidad relativa de que aparezca al menos un foco de incendio nuevo al día siguiente, y reparte esa probabilidad dentro de la comuna en celdas de 1 km. El resultado se publica aquí y, al día siguiente, se contrasta con lo que efectivamente detectaron los satélites. Nada se corrige a mano.</p>
-      <h2>Datos</h2>
-      <ul>
-        <li><b>Detecciones de fuego</b>: NASA FIRMS, sensor VIIRS del satélite S-NPP, tiempo casi real. Un "foco nuevo" es un grupo de detecciones (radio 2 km) que no estaba activo el día anterior. Es un proxy público de ignición: no ve incendios pequeños apagados antes del pase satelital y cuenta quemas agrícolas.</li>
-        <li><b>Meteorología</b>: open-meteo, diaria por comuna (temperatura, humedad, viento, lluvia, radiación), con ventanas de 2, 5 y 10 días, días secos consecutivos y lluvia de 30 días.</li>
-        <li><b>Historia y actividad</b>: frecuencia histórica de focos de la comuna (2012–2025), focos de los últimos 7 y 30 días en la comuna y en sus vecinas.</li>
-        <li><b>Exposición y combustible (1 km)</b>: caminos (OpenStreetMap vía HDX), líneas de transmisión (IDE Energía), población (WorldPop 2020), Catastro de vegetación CONAF 2024.</li>
-      </ul>
-      <h2>Modelo</h2>
-      <p>Dos niveles. El primero (por comuna y día) es un gradient boosting entrenado con 14 temporadas; validado dejando cada temporada fuera, las 10 comunas que prioriza capturan el 41 % de los focos del día siguiente, frente al 35 % de priorizar por frecuencia histórica. El segundo (estático, por celda de 1 km) es un modelo Poisson sobre exposición, combustible e historia; multiplicado por el primero, 1.000 km² de zonas capturan el 12,6 % de los focos de mañana frente al 8,9 % con historia sola.</p>
-      <h2>Lo que no es</h2>
-      <p>El índice ordena comunas y celdas; no es una probabilidad ni un pronóstico de propagación. La columna «Prob. foco» sí es una probabilidad: el índice pasado por una regresión isotónica ajustada con las predicciones fuera de muestra de 11 temporadas (2015–2025): de las comuna-días con ese índice, qué fracción tuvo al menos un foco nuevo al día siguiente. Cambia los números, no el orden. La curva se ajustó con pronósticos a un día; en las vistas de +2 y +3 días se aplica la misma curva al mismo modelo, así que ahí la probabilidad es aproximada y conviene leerla como orden de magnitud. Los días de tormenta de fuego, con decenas de focos repartidos por toda la región, priorizar área sirve poco: ahí el valor está en el aviso previo. Prototipo de <a href="https://wildfireintelligence.co.nz">Wintel — Wildfire Intelligence</a> con datos públicos.</p>
-    </div>
-  </div>
-</section>
-
-<footer class="bottom"><span>Datos: open-meteo, NASA FIRMS VIIRS S-NPP NRT, OSM/HDX, IDE Energía, WorldPop, Catastro CONAF 2024 · Wintel v1 por comuna × mapa estático v4 de 1 km</span><span id="upd"></span></footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="app.js?v=5"></script>
+  <main class="card">
+    <div class="brand"><span class="word">Wintel</span><span class="sub">Wildfire Intelligence</span></div>
+    <div class="rule"></div>
+    <h1>El tablero pasó a acceso por invitación</h1>
+    <p>Wintel en vivo publica cada mañana un pronóstico de ocurrencia de incendios para las comunas de Ñuble, Biobío y La Araucanía, y verifica al día siguiente lo que efectivamente ocurrió. Sigue funcionando todos los días.</p>
+    <p>Desde ahora se consulta con invitación. Si trabajas con nosotros y necesitas entrar, escríbeme y te agrego; el acceso es con tu correo y un código de un solo uso, sin crear cuenta ni instalar nada.</p>
+    <p class="small">Esta dirección se mantiene para que los enlaces antiguos sigan llevando a alguna parte.</p>
+    <p class="meta"><b>Alberto Ardid</b> · Fundador, Wildfire Intelligence<br>
+      <a href="mailto:alberto@wildfireintelligence.co.nz">alberto@wildfireintelligence.co.nz</a> ·
+      <a href="https://www.wildfireintelligence.co.nz">wildfireintelligence.co.nz</a></p>
+  </main>
 </body>
 </html>
