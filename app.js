@@ -41,7 +41,7 @@
     return "rgb(92,29,10)";
   };
   const comStyle = (f) => { const c = current && current.byId[f.properties.comuna_id]; const v = c ? (horizon === 1 ? c.indice : horizon === 2 ? c.indice_h2 : c.indice_h3) : null; return { color: "#fff", weight: 0.7, fillColor: v == null ? "#eee" : ramp(Math.sqrt(Math.min(v, 100) / 100)), fillOpacity: layerMode === "comuna" ? 0.85 : 0 }; };
-  comLayer = L.geoJSON(comunasGeo, { style: comStyle, onEachFeature: (f, l) => l.bindTooltip(() => { const c = current && current.byId[f.properties.comuna_id]; return c ? `<b>${c.comuna}</b><br>índice ${c.indice} · puesto ${c.rank}<br>focos 7 d: ${c.ign_7d}` : f.properties.comuna; }, { sticky: true }) }).addTo(map);
+  comLayer = L.geoJSON(comunasGeo, { style: comStyle, onEachFeature: (f, l) => l.bindTooltip(() => { const c = current && current.byId[f.properties.comuna_id]; return c ? `<b>${c.comuna}</b><br>índice ${c.indice} · puesto ${c.rank}${c.prob == null ? "" : ` · prob. foco ${Math.round(c.prob)} %`}<br>focos 7 d: ${c.ign_7d}` : f.properties.comuna; }, { sticky: true }) }).addTo(map);
   map.fitBounds(comLayer.getBounds(), { padding: [4, 4] });
   document.querySelectorAll(".segb[data-layer]").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll(".segb[data-layer]").forEach((x) => x.classList.toggle("on", x === b)); layerMode = b.dataset.layer;
@@ -77,18 +77,19 @@
     const r = index.resumen; $("#s_w").textContent = fmtPct(r.cap_top10_wintel); $("#s_h").textContent = fmtPct(r.cap_top10_historico);
     $("#s_txt").textContent = `${r.dias_con_focos} días con focos verificados de ${r.dias} publicados · ${r.focos} focos nuevos.`;
     // descargas
-    const csv = ["puesto,comuna,region,indice,indice_h2,indice_h3,indice_historico,puesto_ayer,focos_7d,focos_30d,tmax,hr,viento_max,lluvia,dias_secos,lluvia_30d"].concat(cj.comunas.map((c) => [c.rank, c.comuna, c.region, c.indice, c.indice_h2, c.indice_h3, c.indice_historico, c.rank_ayer, c.ign_7d, c.ign_30d, c.temperature_2m_max, c.relative_humidity_2m_mean, c.wind_speed_10m_max, c.precipitation_sum, c.dry_days, c.rain30].map((v) => (v == null ? "" : v)).join(","))).join("\n");
+    const csv = ["puesto,comuna,region,indice,prob_foco_pct,prob_h2,prob_h3,indice_h2,indice_h3,indice_historico,puesto_ayer,focos_7d,focos_30d,tmax,hr,viento_max,lluvia,dias_secos,lluvia_30d"].concat(cj.comunas.map((c) => [c.rank, c.comuna, c.region, c.indice, c.prob, c.prob_h2, c.prob_h3, c.indice_h2, c.indice_h3, c.indice_historico, c.rank_ayer, c.ign_7d, c.ign_30d, c.temperature_2m_max, c.relative_humidity_2m_mean, c.wind_speed_10m_max, c.precipitation_sum, c.dry_days, c.rain30].map((v) => (v == null ? "" : v)).join(","))).join("\n");
     $("#csv").href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })); $("#csv").download = `wintel_comunas_${day}.csv`;
     $("#geo").href = dir + "zonas.geojson"; $("#geo").download = `wintel_zonas_1km_${day}.geojson`;
     spark(day);
   }
   function renderTable() {
     const key = horizon === 1 ? "indice" : horizon === 2 ? "indice_h2" : "indice_h3";
+    const pkey = horizon === 1 ? "prob" : horizon === 2 ? "prob_h2" : "prob_h3";
     $("#para").textContent = horizon === 1 ? "mañana" : `+${horizon} días`;
     const rows = current.comunas.filter((c) => c[key] != null).sort((a, b) => b[key] - a[key]).slice(0, 10);
     $("#tbl tbody").innerHTML = rows.map((c, i) => {
       const ayer = c.rank_ayer == null ? '<td class="r mute">—</td>' : c.rank_ayer > 10 ? '<td class="r new">nueva</td>' : `<td class="r mute">${c.rank_ayer}º</td>`;
-      return `<tr><td class="mute num">${i + 1}</td><td><span class="cm">${c.comuna}</span><span class="rg">${c.region}</span></td><td><span class="bar"><i><b style="width:${Math.min(100, c[key])}px"></b></i><span class="v num">${Math.round(c[key])}</span></span></td>${ayer}<td class="r num mute">${c.ign_7d}</td></tr>`;
+      return `<tr><td class="mute num">${i + 1}</td><td><span class="cm">${c.comuna}</span><span class="rg">${c.region}</span></td><td><span class="bar"><i><b style="width:${Math.min(100, c[key])}px"></b></i><span class="v num">${Math.round(c[key])}</span></span></td><td class="r num">${c[pkey] == null ? '<span class="mute">—</span>' : `${Math.round(c[pkey])} %`}</td>${ayer}<td class="r num mute">${c.ign_7d}</td></tr>`;
     }).join("");
   }
   function spark(day) {

@@ -50,9 +50,9 @@
     </div>
 
     <div class="card">
-      <div class="cardhead"><div class="h">Comunas priorizadas para <span id="para">mañana</span></div><div class="note">índice 0–100 · orden para posicionar recursos</div></div>
+      <div class="cardhead"><div class="h">Comunas priorizadas para <span id="para">mañana</span></div><div class="note">índice 0–100 para ordenar · prob. foco = probabilidad calibrada de al menos un foco mañana</div></div>
       <div class="hz" id="hz"><button class="segb on" data-h="1">Mañana</button><button class="segb" data-h="2">+2 días</button><button class="segb" data-h="3">+3 días</button></div>
-      <table class="tbl" id="tbl"><thead><tr><th>#</th><th>Comuna</th><th>Índice</th><th class="r">Ayer</th><th class="r" title="focos nuevos en la comuna, últimos 7 días">7 d</th></tr></thead><tbody></tbody></table>
+      <table class="tbl" id="tbl"><thead><tr><th>#</th><th>Comuna</th><th>Índice</th><th class="r" title="probabilidad calibrada de que aparezca al menos un foco nuevo en la comuna al día siguiente (regresión isotónica sobre 11 temporadas fuera de muestra)">Prob. foco</th><th class="r">Ayer</th><th class="r" title="focos nuevos en la comuna, últimos 7 días">7 d</th></tr></thead><tbody></tbody></table>
       <div class="actions"><a class="btn dark" id="csv" href="#" download>Descargar tabla (CSV)</a><a class="btn" id="geo" href="#" download>Zonas 1 km (GeoJSON)</a></div>
     </div>
 
@@ -110,7 +110,7 @@
       <h2>Modelo</h2>
       <p>Dos niveles. El primero (por comuna y día) es un gradient boosting entrenado con 14 temporadas; validado dejando cada temporada fuera, las 10 comunas que prioriza capturan el 41 % de los focos del día siguiente, frente al 35 % de priorizar por frecuencia histórica. El segundo (estático, por celda de 1 km) es un modelo Poisson sobre exposición, combustible e historia; multiplicado por el primero, 1.000 km² de zonas capturan el 12,6 % de los focos de mañana frente al 8,9 % con historia sola.</p>
       <h2>Lo que no es</h2>
-      <p>El índice ordena comunas y celdas; no es una probabilidad calibrada ni un pronóstico de propagación. Los días de tormenta de fuego, con decenas de focos repartidos por toda la región, priorizar área sirve poco: ahí el valor está en el aviso previo. Prototipo de <a href="https://wildfireintelligence.co.nz">Wintel — Wildfire Intelligence</a> con datos públicos.</p>
+      <p>El índice ordena comunas y celdas; no es una probabilidad ni un pronóstico de propagación. La columna «Prob. foco» sí es una probabilidad: el índice pasado por una regresión isotónica ajustada con las predicciones fuera de muestra de 11 temporadas (2015–2025): de las comuna-días con ese índice, qué fracción tuvo al menos un foco nuevo al día siguiente. Cambia los números, no el orden. Los días de tormenta de fuego, con decenas de focos repartidos por toda la región, priorizar área sirve poco: ahí el valor está en el aviso previo. Prototipo de <a href="https://wildfireintelligence.co.nz">Wintel — Wildfire Intelligence</a> con datos públicos.</p>
     </div>
   </div>
 </section>
